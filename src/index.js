@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { expertSlidesAIBackendStatus, expertSlidesBackendStatus, expertSlidesDatabaseStatus, expertSlidesFrontendStatus, expertSlidesLandingPageStatus, expertSlidesLLMStatus } from "./utils/health/index.js";
 import cronjob from "./schedulers/checkServiceStatusEveryHour.js";
-import { sendEmailOnServiceDown } from "./utils/sendEmailOnServiceDown.js";
+// import { sendEmailOnServiceDown } from "./utils/sendEmailOnServiceDown.js";
 
 const app = express();
 
@@ -31,18 +31,18 @@ app.get('/', async (_req, res) => {
 
         res.render("summary", { data: summary, });
 
-        setImmediate(() => {
-            const services = [landingPage, frontend, backend, database, aiBackend, claude, perplexity];
-            const hasDownService = services.some(service => !service.ok || !service.reachable);
+        // setImmediate(() => {
+        //     const services = [landingPage, frontend, backend, database, aiBackend, claude, perplexity];
+        //     const hasDownService = services.some(service => !service.ok || !service.reachable);
 
-            if (hasDownService && process.env.ALERT_EMAIL_RECEIVER) {
-                console.log('[ALERT] : SERVICE IS DOWN');
-                sendEmailOnServiceDown(process.env.ALERT_EMAIL_RECEIVER, summary)
-                    .catch(e => console.log(e.message));
-            } else {
-                console.log("All services are UP!", { summary });
-            }
-        });
+        //     if (hasDownService && process.env.ALERT_EMAIL_RECEIVER) {
+        //         console.log('[ALERT] : SERVICE IS DOWN');
+        //         sendEmailOnServiceDown(process.env.ALERT_EMAIL_RECEIVER, summary)
+        //             .catch(e => console.log(e.message));
+        //     } else {
+        //         console.log("All services are UP!", { summary });
+        //     }
+        // });
 
     } catch (err) {
         console.error(err);
