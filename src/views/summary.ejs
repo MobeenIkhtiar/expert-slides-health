@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Health Summary</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+    <%- include('partials/header') %>
+
+        <%
+            const allOperational = Object.keys(data).every(key => data[key].ok && data[key].reachable);
+            const statusMessage = allOperational ? 'All Systems Operational' : 'Some Systems Are Down';
+            const statusClass = allOperational ? 'operational' : 'down';
+        %>
+
+        <div class="status-banner <%= statusClass %>">
+            <%= statusMessage %>
+        </div>
+
+        <%
+            function formatLastCheck(timestamp) {
+                const now = new Date();
+                const checkTime = new Date(timestamp);
+                const diffMs = now - checkTime;
+                const diffSeconds = Math.floor(diffMs / 1000);
+                const diffMinutes = Math.floor(diffSeconds / 60);
+                const diffHours = Math.floor(diffMinutes / 60);
+                
+                if (diffSeconds < 60) {
+                    return 'Just now';
+                } else if (diffMinutes < 60) {
+                    return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+                } else if (diffHours < 24) {
+                    return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+                } else {
+                    const options = { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                    };
+                    return checkTime.toLocaleDateString('en-US', options);
+                }
+            }
+        %>
+
+        <div class="container">
+            <div class="dashboard">
+                <% Object.keys(data).forEach(key=> {
+                    const service = data[key]; %>
+                    <div class="card">
+                        <h3>
+                            <%= service.service %>
+                        </h3>
+                        <p><span class="label">URL:</span> <a href="<%= service.url %>" target="_blank">
+                                <%= service.url %>
+                            </a></p>
+                        <p><span class="label">Latency:</span> <span style="color: <%= service.latencyMs > 1000 ? '#E7363A' : '#FFA358' %>; font-weight: 600;">
+                                <%= service.latencyMs %> ms
+                            </span></p>
+                        <p><span class="label">Status:</span> <span class="status <%= service.ok ? 'up' : 'down' %>">
+                                <%= service.ok ? 'UP' : 'DOWN' %>
+                            </span></p>
+                        <p><span class="label">Operational:</span> <span style="color: <%= service.reachable ? '#FFA358' : '#E7363A' %>; font-weight: 600;">
+                                <%= service.reachable ? 'Operational' : 'Not Operational' %>
+                            </span></p>
+                        <p><span class="label">Last Check:</span> <span class="last-check" data-timestamp="<%= service.timestamp %>"><%= formatLastCheck(service.timestamp) %></span>
+                        </p>
+                        <% if (!service.ok && service.error) { %>
+                            <p class="label">Error: <%= service.error %>
+                            </p>
+                            <% } %>
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+
+
+        <%- include('partials/footer') %>
+
+    <script>
+        function formatLastCheck(timestamp) {
+            const now = new Date();
+            const checkTime = new Date(timestamp);
+            const diffMs = now - checkTime;
+            const diffSeconds = Math.floor(diffMs / 1000);
+            const diffMinutes = Math.floor(diffSeconds / 60);
+            const diffHours = Math.floor(diffMinutes / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            if (diffSeconds < 60) {
+                return 'Just now';
+            } else if (diffMinutes < 60) {
+                return `${diffMinutes}m ago`;
+            } else if (diffHours < 24) {
+                return `${diffHours}h ago`;
+            } else if (diffDays < 7) {
+                return `${diffDays}d ago`;
+            } else {
+                const options = { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true
+                };
+                return checkTime.toLocaleDateString('en-US', options);
+            }
+        }
+
+        function updateLastCheckTimes() {
+            const lastCheckElements = document.querySelectorAll('.last-check[data-timestamp]');
+            lastCheckElements.forEach(element => {
+                const timestamp = element.getAttribute('data-timestamp');
+                element.textContent = formatLastCheck(timestamp);
+            });
+        }
+
+        // Update immediately on load
+        updateLastCheckTimes();
+
+        // Update every 30 seconds
+        setInterval(updateLastCheckTimes, 30000);
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,221 @@
+/* Import Poppins from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f1ed 0%, #e8ddd4 100%);
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background: #2B1813;
+    color: #ffffff;
+    text-align: center;
+    padding: 1.5rem 0;
+    box-shadow: 0 4px 20px rgba(43, 24, 19, 0.3);
+    position: relative;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #E7363A 0%, #FFA358 100%);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+footer {
+    background: #2B1813;
+    color: #ffffff;
+    text-align: center;
+    padding: 1.5rem 0;
+    box-shadow: 0 -4px 20px rgba(43, 24, 19, 0.3);
+    position: relative;
+    margin-top: auto;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #E7363A 0%, #FFA358 100%);
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #f5f1ed;
+    font-weight: 500;
+}
+
+.status-banner {
+    text-align: center;
+    padding: 1rem 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.status-banner.operational {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.status-banner.down {
+    background: linear-gradient(135deg, #E7363A 0%, #dc2626 100%);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+    flex: 1;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+    
+    .container {
+        padding: 0 1rem;
+        margin: 2rem auto;
+    }
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    padding: 2.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #E7363A 0%, #FFA358 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.card:hover::before {
+    transform: scaleX(1);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+    color: #2B1813;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card h3::before {
+    content: '📊';
+    font-size: 1.2rem;
+}
+
+.card p {
+    margin: 0.8rem 0;
+    font-size: 0.95rem;
+    color: #475569;
+    line-height: 1.6;
+}
+
+.card p:first-of-type {
+    margin-top: 0;
+}
+
+.card p .label {
+    font-weight: 600;
+    color: #2B1813;
+    margin-right: 0.5rem;
+}
+
+.card p .last-check {
+    color: #64748b;
+    font-style: italic;
+}
+
+.card a {
+    color: #E7363A;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 500;
+    word-break: break-all;
+}
+
+.card a:hover {
+    color: #FFA358;
+    text-decoration: underline;
+}
+
+.status {
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.75rem;
+    display: inline-block;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #E7363A 0%, #FFA358 100%);
+    box-shadow: 0 2px 8px rgba(231, 54, 58, 0.3);
+}
+
+.status.up {
+    background: linear-gradient(135deg, #E7363A 0%, #FFA358 100%);
+    box-shadow: 0 4px 15px rgba(231, 54, 58, 0.4);
+}
+
+.status.down {
+    background: linear-gradient(135deg, #E7363A 0%, #FFA358 100%);
+    box-shadow: 0 4px 15px rgba(231, 54, 58, 0.4);
+    opacity: 0.8;
+}
