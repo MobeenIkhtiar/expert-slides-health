@@ -33,8 +33,6 @@ export const sendEmailOnServiceDown = async (to, summary) => {
       { key: 'backend', data: summary.backend },
       { key: 'database', data: summary.database },
       { key: 'aiBackend', data: summary.aiBackend },
-      { key: 'claude', data: summary.claude },
-      { key: 'perplexity', data: summary.perplexity }
     ];
 
     const downServices = services.filter(s => !s.data.ok || !s.data.reachable);

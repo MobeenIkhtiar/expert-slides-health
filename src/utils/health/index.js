@@ -225,54 +225,10 @@ const expertSlidesAIBackendStatus = async () => {
     }
 };
 
-const expertSlidesLLMStatus = async (model) => {
-
-    const url = `${process.env.AI_BACKEND_SERVER_URL}/test_llm?model=${model}`;
-    const startTime = Date.now();
-    const serviceName = `${process.env.BACKEND_AI_SERVICE_LLM_NAME} (${model})` || "expert-slides-llm";
-
-    try {
-        const response = await axios.get(url, {
-            timeout: 10000,
-            validateStatus: () => true,
-        });
-
-        const latencyMs = Date.now() - startTime;
-        const reachable = isHealthyStatus(response.status);
-
-        return {
-            service: serviceName,
-            url,
-            ok: reachable,
-            reachable,
-            status: response.status,
-            statusText: response.statusText ?? null,
-            latencyMs,
-            timestamp: new Date().toISOString(),
-        };
-
-    } catch (error) {
-        const latencyMs = Date.now() - startTime;
-
-        return {
-            service: serviceName,
-            url,
-            ok: false,
-            reachable: false,
-            status: null,
-            statusText: null,
-            latencyMs,
-            error: error.message,
-            timestamp: new Date().toISOString(),
-        };
-    }
-}
-
 export {
     expertSlidesDatabaseStatus,
     expertSlidesBackendStatus,
     expertSlidesFrontendStatus,
     expertSlidesAIBackendStatus,
-    expertSlidesLLMStatus,
     expertSlidesLandingPageStatus
 };
