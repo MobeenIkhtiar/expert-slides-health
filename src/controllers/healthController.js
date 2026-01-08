@@ -9,13 +9,15 @@ export const expertSlidesHealthMonitor = async (_req, res) => {
 
         const summary = { landingPage, frontend, backend, database, aiBackend, };
 
-        // Check if any service is down
         const services = [landingPage, frontend, backend, database, aiBackend,];
         const hasDownService = services.some(service => !service.ok || !service.reachable);
 
-        // Send email if any service is down
-        if (hasDownService && process.env.ALERT_EMAIL_RECEIVER) {
-            await sendEmailOnServiceDown(process.env.ALERT_EMAIL_RECEIVER, summary);
+        const ALERT_EMAIL_RECEIVERS = process.env.ALERT_EMAIL_RECEIVERS?.split(',').map((e) => e.trim()).filter(Boolean) || [];
+
+        if (hasDownService && ALERT_EMAIL_RECEIVERS && ALERT_EMAIL_RECEIVERS.length > 0) {
+            await Promise.allSettled(ALERT_EMAIL_RECEIVERS.map((email) => sendEmailOnServiceDown(email, summary)))
+        } else {
+            console.log('ALERT_EMAIL_RECEIVERS is missing or invalid. Please provide a comma separated string of emails.');
         }
 
         return successResponse(res, "Health monitoring finished successfully!", summary);

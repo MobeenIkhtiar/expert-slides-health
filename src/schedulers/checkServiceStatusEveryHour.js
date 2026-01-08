@@ -12,13 +12,18 @@ const cronjob = cron.schedule('0 * * * *', async () => {
     const services = [landingPage, frontend, backend, database, aiBackend,];
     const hasDownService = services.some(service => !service.ok || !service.reachable);
 
-    if (hasDownService && process.env.ALERT_EMAIL_RECEIVER) {
-        console.log('[ALERT] : SERVICE IS DOWN');
-        console.log({ summary });
-        await sendEmailOnServiceDown(process.env.ALERT_EMAIL_RECEIVER, summary);
+    const ALERT_EMAIL_RECEIVERS = process.env.ALERT_EMAIL_RECEIVERS?.split(',').map((e) => e.trim()).filter(Boolean) || [];
+
+    if (hasDownService && ALERT_EMAIL_RECEIVERS && ALERT_EMAIL_RECEIVERS.length > 0) {
+        await Promise.allSettled(ALERT_EMAIL_RECEIVERS.map((email) => sendEmailOnServiceDown(email, summary)))
     } else {
-        console.log("All services are UP!", { summary });
+        console.log('ALERT_EMAIL_RECEIVERS is missing or invalid. Please provide a comma separated string of emails.');
     }
+
+    if (!hasDownService) {
+        console.log('Everything is good!');
+    }
+    
 });
 
 export default cronjob;
